@@ -1,0 +1,325 @@
+openapi: 3.0.3
+info:
+  title: AI Energy Management Platform API
+  version: 1.0.0
+  description: API contract for the AI Energy Management Platform backend.
+
+servers:
+  - url: http://localhost:8080/api/v1
+
+paths:
+  /dashboard/summary:
+    get:
+      summary: Get dashboard summary metrics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummary'
+
+  /meters:
+    get:
+      summary: List all electrical meters
+      responses:
+        '200':
+          description: List of meters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meter'
+
+  /meters/{meterId}:
+    get:
+      summary: Get meter details by ID
+      parameters:
+        - name: meterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Meter details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+        '404':
+          description: Meter not found
+
+  /meters/{meterId}/readings:
+    get:
+      summary: Get historical electrical readings for a meter
+      parameters:
+        - name: meterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: List of readings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reading'
+
+  /anomalies:
+    get:
+      summary: List all detected anomalies
+      responses:
+        '200':
+          description: List of anomalies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Anomaly'
+
+  /anomalies/{id}:
+    get:
+      summary: Get anomaly detail by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Anomaly details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Anomaly'
+        '404':
+          description: Anomaly not found
+
+  /ai/analyze:
+    post:
+      summary: Trigger AI analysis for a meter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - meter_id
+              properties:
+                meter_id:
+                  type: string
+      responses:
+        '202':
+          description: Analysis started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analysis_id:
+                    type: integer
+                  status:
+                    $ref: '#/components/schemas/AnalysisStatus'
+                  meter_id:
+                    type: string
+
+  /ai/analysis/{id}:
+    get:
+      summary: Get AI analysis status and results
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Analysis details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIAnalysis'
+        '404':
+          description: Analysis not found
+
+components:
+  schemas:
+    AnomalyType:
+      type: string
+      enum:
+        - REAL_ANOMALY
+        - EXPLAINABLE_ANOMALY
+        - FALSE_POSITIVE
+        - DATA_QUALITY
+        - NORMAL
+
+    SeverityLevel:
+      type: string
+      enum:
+        - HIGH
+        - MEDIUM
+        - LOW
+
+    AnalysisStatus:
+      type: string
+      enum:
+        - PENDING
+        - RUNNING
+        - COMPLETED
+        - FAILED
+
+    MeterStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - MAINTENANCE
+
+    Meter:
+      type: object
+      properties:
+        id:
+          type: integer
+        meter_id:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+        status:
+          $ref: '#/components/schemas/MeterStatus'
+        created_at:
+          type: string
+          format: date-time
+
+    Reading:
+      type: object
+      properties:
+        id:
+          type: integer
+        meter_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        consumption_kwh:
+          type: number
+          format: double
+        voltage_v:
+          type: number
+          format: double
+        current_a:
+          type: number
+          format: double
+        power_factor:
+          type: number
+          format: double
+        status:
+          type: string
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        meter_id:
+          type: string
+        event_timestamp:
+          type: string
+          format: date-time
+        event_type:
+          type: string
+        description:
+          type: string
+
+    Anomaly:
+      type: object
+      properties:
+        id:
+          type: integer
+        meter_id:
+          type: string
+        detected_at:
+          type: string
+          format: date-time
+        type:
+          $ref: '#/components/schemas/AnomalyType'
+        severity:
+          $ref: '#/components/schemas/SeverityLevel'
+        confidence:
+          type: number
+          format: double
+        variation_percent:
+          type: number
+          format: double
+        baseline:
+          type: number
+          format: double
+        consumption:
+          type: number
+          format: double
+        known_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        evidence:
+          type: array
+          items:
+            type: string
+        reason:
+          type: string
+        recommended_action:
+          type: string
+        status:
+          type: string
+
+    AIAnalysis:
+      type: object
+      properties:
+        id:
+          type: integer
+        meter_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+        result:
+          $ref: '#/components/schemas/Anomaly'
+        created_at:
+          type: string
+          format: date-time
+
+    DashboardSummary:
+      type: object
+      properties:
+        total_meters:
+          type: integer
+        active_anomalies:
+          type: integer
+        high_severity:
+          type: integer
+        data_quality_issues:
+          type: integer
+        total_consumption_kwh:
+          type: number
+          format: double
+        consumption_change_percent:
+          type: number
+          format: double
+        last_analysis_at:
+          type: string
+          format: date-time
+          nullable: true
