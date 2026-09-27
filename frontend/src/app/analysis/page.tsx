@@ -173,9 +173,8 @@ function AnalysisContent() {
       {!analysis && !loading && (
         <div className="bg-white border border-slate-200 shadow-2xs rounded p-12 text-center text-slate-500">
           <Cpu className="w-12 h-12 mx-auto text-slate-400 mb-3" />
-          <h3 className="font-semibold text-slate-900 mb-1">Aún no se ha ejecutado ningún análisis</h3>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
-            Seleccione un medidor arriba y haga clic en &quot;Analizar&quot; para iniciar el flujo de trabajo de investigación con IA.
+            Seleccione un medidor arriba y haga clic en &quot;Analizar&quot; para iniciar un nuevo flujo de trabajo de investigación con IA.
           </p>
         </div>
       )}

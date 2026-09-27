@@ -9,7 +9,7 @@ import { AlertTriangle, Gauge, Zap, ShieldAlert, Cpu, Clock } from 'lucide-react
 import { DashboardCard } from '@/components/dashboard/DashboardCard';
 import { ConsumptionTrendChart } from '@/components/dashboard/ConsumptionTrendChart';
 import { MetersStatusPieChart } from '@/components/dashboard/MetersStatusPieChart';
-import { RecentAnomaliesTable } from '@/components/dashboard/RecentAnomaliesTable';
+import { AnomaliesTable } from '@/components/common/AnomaliesTable';
 
 function DashboardContent() {
   const [summary, setSummary] = React.useState<DashboardSummary | null>(null);
@@ -115,8 +115,6 @@ function DashboardContent() {
   const activePercent = meters.length > 0 ? Math.round((activeMetersCount / meters.length) * 100) : 0;
   const highSeverityCount = anomalies.filter((a) => a.severity === 'HIGH').length;
 
-  const consumptionChange = summary?.consumption_change_percent ?? 0;
-
   // Calculate average confidence from anomalies list
   const avgConfidence = anomalies.length > 0
     ? Math.round((anomalies.reduce((acc, a) => acc + (a.confidence || 0), 0) / anomalies.length) * 100)
@@ -220,7 +218,7 @@ function DashboardContent() {
       </div>
 
       {/* THIRD ROW: Last Anomalies Table Component */}
-      <RecentAnomaliesTable anomalies={anomalies} />
+      <AnomaliesTable anomalies={anomalies} />
     </div>
   );
 }

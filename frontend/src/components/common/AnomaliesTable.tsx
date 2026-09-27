@@ -56,44 +56,52 @@ export function AnomaliesTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
-            {sortedAnomalies.map((anom) => (
-              <tr key={anom.id} className="hover:bg-slate-50/80 transition-colors">
-                {showMeterId && (
-                  <td className="px-6 py-4 font-mono font-semibold text-slate-900">
-                    <Link href={`/meters/${anom.meter_id}`} className="hover:underline text-emerald-600">
-                      {anom.meter_id}
-                    </Link>
-                  </td>
-                )}
-                <td className="px-6 py-4 w-64">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold ${getAnomalyTypeBadgeClass(anom.type)}`}>
-                    {translateAnomalyType(anom.type)}
-                  </span>
-                </td>
-                <td className="px-6 py-4 w-28">
-                  <span className={`font-semibold ${getSeverityBadgeClass(anom.severity)}`}>
-                    {translateSeverity(anom.severity)}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-slate-700 font-mono w-24">
-                  {(anom.confidence * 100).toFixed(0)}%
-                </td>
-                <td className="px-6 py-4 text-slate-600 max-w-[200px] truncate" title={anom.reason}>
-                  {anom.reason}
-                </td>
-                <td className="px-6 py-4 text-xs font-mono text-slate-600 w-52">
-                  {new Date(anom.detected_at).toLocaleString('es-ES', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                </td>
-                <td className="px-6 py-4 text-right w-28">
-                  <Link
-                    href={`/anomalies/${anom.id}`}
-                    className="text-xs bg-white hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded border border-slate-200 transition-colors shadow-2xs"
-                  >
-                    Investigar
-                  </Link>
+            {sortedAnomalies.length === 0 ? (
+              <tr>
+                <td colSpan={showMeterId ? 7 : 6} className="px-6 py-5 text-center text-slate-400 text-xs italic">
+                  No hay anomalías registradas.
                 </td>
               </tr>
-            ))}
+            ) : (
+              sortedAnomalies.map((anom) => (
+                <tr key={anom.id} className="hover:bg-slate-50/80 transition-colors">
+                  {showMeterId && (
+                    <td className="px-6 py-4 font-mono font-semibold text-slate-900">
+                      <Link href={`/meters/${anom.meter_id}`} className="hover:underline text-emerald-600">
+                        {anom.meter_id}
+                      </Link>
+                    </td>
+                  )}
+                  <td className="px-6 py-4 w-64">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold ${getAnomalyTypeBadgeClass(anom.type)}`}>
+                      {translateAnomalyType(anom.type)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 w-28">
+                    <span className={`font-semibold ${getSeverityBadgeClass(anom.severity)}`}>
+                      {translateSeverity(anom.severity)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-slate-700 font-mono w-24">
+                    {(anom.confidence * 100).toFixed(0)}%
+                  </td>
+                  <td className="px-6 py-4 text-slate-600 max-w-[200px] truncate" title={anom.reason}>
+                    {anom.reason}
+                  </td>
+                  <td className="px-6 py-4 text-xs font-mono text-slate-600 w-52">
+                    {new Date(anom.detected_at).toLocaleString('es-ES', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </td>
+                  <td className="px-6 py-4 text-right w-28">
+                    <Link
+                      href={`/anomalies/${anom.id}`}
+                      className="text-xs bg-white hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded border border-slate-200 transition-colors shadow-2xs"
+                    >
+                      Investigar
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
