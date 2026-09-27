@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bia Energy AI - Frontend Application
 
-## Getting Started
+Plataforma SaaS MVP de gestión energética y detección de anomalías basada en inteligencia artificial y análisis de telemetría eléctrica.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack Tecnológico
+
+* **Framework:** Next.js (App Router)
+* **Lenguaje:** TypeScript
+* **Librería UI:** React 19
+* **Estilos:** Tailwind CSS (Light Theme profesional)
+* **Visualización de Datos:** Recharts (Gráficos de series temporales y gráficos circulares de distribución)
+* **Autenticación:** Supabase Auth (Inicio de sesión y registro de usuarios)
+* **Iconos:** Lucide React
+
+---
+
+## Estructura de Páginas
+
+1. **Panel Principal (Dashboard - `/`)**: 
+   * Resumen de la flota de medidores, consumo total, anomalías activas, alta prioridad, confianza IA y último análisis.
+   * Gráfico de tendencia de consumo por medidor (con selector de medidor y botón "Ver detalle").
+   * Gráfico de distribución del estado de los medidores (Activos, Inactivos, Mantenimiento con botón "Ver listado").
+   * Tabla de últimas anomalías detectadas ordenadas por fecha reciente.
+2. **Medidores (`/meters`)**:
+   * Listado de los medidores con búsqueda en tiempo real y filtrado por estado.
+3. **Detalle de Medidor (`/meters/[id]`)**:
+   * Estructurado en 5 bloques operacionales: Identidad/Status, Consumo (Actual vs Línea Base con gráfico y selector de período `24h`, `7d`, `14d`), Mediciones Eléctricas (Voltaje, Corriente, Factor de Potencia), Anomalías Asociadas y Eventos Operacionales.
+4. **Anomalías IA (`/anomalies`)**:
+   * Listado de anomalías e incidentes con filtros avanzados por tipo, severidad y ordenamiento.
+5. **Detalle de Anomalía (`/anomalies/[id]`)**:
+   * Investigación detallada de anomalías con explicaciones generadas por IA, acciones recomendadas y evidencia estructurada.
+6. **Investigación IA (`/analysis`)**:
+   * Espacio de trabajo para ejecutar ciclos de análisis de IA (`POST /api/v1/ai/analyze`) con sondeo en tiempo real de estado y visualización de resultados en modal interactivo.
+7. **Información (`/information`)**:
+   * Especificaciones técnicas de la arquitectura, repositorio, despliegue en Railway, base de datos PostgreSQL, modelo GPT y servicios de autenticación.
+
+---
+
+## Configuración y Variables de Entorno
+
+Cree un archivo `.env.local` en el directorio `frontend/` con las siguientes variables:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://<your-backend-base-url>
+NEXT_PUBLIC_SUPABASE_URL=https://<your-supabase-project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Instalación y Ejecución
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Instalar dependencias:
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. Ejecutar el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Compilar para producción:
+   ```bash
+   npm run build
+   ```
