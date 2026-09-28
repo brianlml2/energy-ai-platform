@@ -2,6 +2,20 @@
 
 An advanced energy analytics and AI platform containing a backend service and a frontend web application.
 
+## Live Demo
+
+- **URL**: [https://bia-energy-ai-test-brian-production.up.railway.app/login](https://bia-energy-ai-test-brian-production.up.railway.app/login)
+
+## Authentication & Access
+
+You can log into the live platform using either:
+- **Default Account**:
+  - **Email**: `test@gmail.com`
+  - **Password**: `testtest`
+- **New Account**: Create a new account directly via the login/signup flow (Supabase powered).
+
+---
+
 ## Project Structure
 
 - **`backend/`**: Backend service (Go-based with database migrations and API endpoints).
@@ -13,8 +27,3 @@ An advanced energy analytics and AI platform containing a backend service and a 
 
 - Node.js & npm (for the frontend)
 - Go (for the backend)
-
-### Running Locally
-
-1. **Backend**: Navigate to `backend/` and run your server/service.
-2. **Frontend**: Navigate to `frontend/`, run `npm install`, and then `npm run dev`.
